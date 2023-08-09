@@ -31,3 +31,22 @@ Cypress.Commands.add('login', (usuario, senha) => {
     cy.get('.woocommerce-form > .button').click()
 });
 
+Cypress.Commands.add('AddProdutos', (produto, cor, tamanho, quantidade) => {
+
+    cy.get('[class="product-block grid"]').contains(produto).click()
+    cy.get('.button-variable-item-' + cor).click()
+    cy.get('.button-variable-item-' + tamanho).click()
+    cy.get('.input-text').clear().type(quantidade)
+    cy.get('.single_add_to_cart_button').click()
+    cy.get('.dropdown-toggle > .mini-cart-items').click()
+   
+   cy.get('#cart > .dropdown-menu > .widget_shopping_cart_content > .mini_cart_content > .mini_cart_inner > .mcart-border')
+  .should($element => {
+    const cartText = $element.text();
+    
+    // Verifique se o texto contém o mesmo produto e a mesma quantidade da primeira parte do código
+    expect(cartText).to.contain(produto);
+    expect(cartText).to.contain(quantidade);
+  });
+})
+
